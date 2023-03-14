@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Text, View, StyleSheet, ToastAndroid, Alert } from 'react-native'
 import { Button, Badge } from 'react-native-paper';
 import noteContext from '../contexts/notes/NoteContext'
@@ -7,37 +7,47 @@ const NoteItem = (props) => {
     const context = useContext(noteContext)
     const { deleteNote } = context;
 
-    const { note } = props
+    const { note, setShowModal, modalNote, setModalNote } = props
 
     const formattedTimeStamp = (date) => {
         let dat = new Date(date)
         return dat.toLocaleString('default', { month: 'short' }) + " " + dat.getDate() + ", " + dat.getFullYear()
     }
 
-    const handleDelete = (id)=>{
+    const handleDelete = (id) => {
         Alert.alert('Alert', "Are you sure to delete this note?", [
             {
-              text: 'Cancel',
-              onPress: () => {
-                // console.log("Cancelled delete")
-              },
-              style: 'cancel',
+                text: 'Cancel',
+                onPress: () => {
+                    // console.log("Cancelled delete")
+                },
+                style: 'cancel',
             },
             {
                 text: 'Yes',
-                onPress: () =>{
+                onPress: () => {
                     deleteNote(id);
                     ToastAndroid.show('Deleted successfully!', ToastAndroid.SHORT)
                 }
             }
-          ],
-          {
-            cancelable: true,
-            onDismiss: () => {
-                // console.log("Alert was dismissed by clicking outside the Alert box")
-            }
-          },
-          )
+        ],
+            {
+                cancelable: true,
+                onDismiss: () => {
+                    // console.log("Alert was dismissed by clicking outside the Alert box")
+                }
+            },
+        )
+    }
+
+    const updateModalContent = async (currentNote)=>{
+        setModalNote({...modalNote, m_id: currentNote._id, m_title: currentNote.title, m_content: currentNote.content, m_tag: currentNote.tag})
+    }
+
+    const handleUpdateBtnClick = async (currentNote) => {
+        await updateModalContent(currentNote)
+        // write code to open the modal and pass the values of modalNote state to the modal input elements
+        setShowModal(true)
     }
 
     return (
@@ -45,11 +55,9 @@ const NoteItem = (props) => {
             <Badge
                 value={'Hello'}
                 style={styles.badge}
-                // status="primary"
-                // containerStyle={{ position: 'absolute', top: -20, right: -4 }}
             >{formattedTimeStamp(note.timestamp)}</Badge>
-            <Text style={styles.card__title}> {note.title} {/*formattedTimeStamp(note.timestamp)*/}</Text>
-            <Text style={styles.card__content}> {note.content} {/*formattedTimeStamp(note.timestamp)*/}</Text>
+            <Text style={styles.card__title}> {note.title}</Text>
+            <Text style={styles.card__content}> {note.content}</Text>
             <View style={styles.button_container}>
                 <Button
                     mode='contained'
@@ -61,7 +69,7 @@ const NoteItem = (props) => {
                 <Button
                     mode='contained'
                     style={styles.button__update}
-                    onPress={() => { console.log("Update the note", note.title) }}
+                    onPress={() => { handleUpdateBtnClick(note) }}
                 >
                     Update
                 </Button>
@@ -73,8 +81,6 @@ const NoteItem = (props) => {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: '#fced',
-        
-        // backgroundColor: '#d6ffeb',
         marginVertical: 10,
         marginHorizontal: 17,
         borderRadius: 10,

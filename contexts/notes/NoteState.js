@@ -47,7 +47,7 @@ const NoteState = (props) => {
             },
             body: JSON.stringify({ title, content, tag })
         });
-        const note = await response.json(); // The added  note will bve returned by the backend
+        const note = await response.json(); // The added note will be returned by the backend
         setNotes(notes.concat(note))
     }
 
@@ -71,8 +71,40 @@ const NoteState = (props) => {
         setNotes(newNotes)
     }
 
+    // Update a note
+    const updateNote = async (id, title, content, tag)=>{
+        // API call for updating the note in DB
+        const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            "auth-token": await fetchAuthToken()
+          },
+          body: JSON.stringify({title, content, tag})
+        });
+  
+        // creating a deep copy of 'notes'
+        let newNotes = JSON.parse(JSON.stringify(notes))
+  
+        // Logic to edit in client side
+        if(response.status === 200)
+        {
+          for(let element of newNotes)
+          {
+            if(element._id === id)
+            {
+              element.title = title
+              element.content = content
+              element.tag = tag;
+              break;
+            }
+          }
+        }
+        setNotes(newNotes);
+      }
+
     return (
-        <NoteContext.Provider value={{ notes, fetchAllNotes, addNote, deleteNote }}>
+        <NoteContext.Provider value={{ notes, fetchAllNotes, addNote, deleteNote, updateNote }}>
             {props.children}
         </NoteContext.Provider>
     )

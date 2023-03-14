@@ -39,10 +39,13 @@ export default function LoginScreen(props) {
                 ToastAndroid.show('Successfully logged in!!!', ToastAndroid.SHORT)
                 props.navigation.replace('home')
             } catch (e) {
-                // saving error
                 Alert.alert('Failed', 'Something wrong happened 😢\n\nPlease try again', [ {text: 'OK'}])
                 
             }
+          }
+          else
+          {
+            Alert.alert('Login Failed', 'Incorrect credentials😢', [ {text: 'OK'}])
           }
     }
 

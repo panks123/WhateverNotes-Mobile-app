@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { Text, View, StyleSheet, ToastAndroid } from 'react-native'
+import { Text, View, StyleSheet, ToastAndroid, Alert } from 'react-native'
 import { Button, TextInput } from 'react-native-paper';
 import noteContext from '../contexts/notes/NoteContext'
 
@@ -17,14 +17,23 @@ const AddNote = () => {
 
     const handleAddNoteBtnClick =()=>{
         // console.log(note)
-        addNote(note.title, note.content, note.tag)
-        setNote({ title: "", content: "", tag: "" })
-        ToastAndroid.show('Note was added successfully!', ToastAndroid.SHORT)
+        if(note.title.length<1)
+        {
+            Alert.alert('Failed', 'Note title should not be empty', [ {text: 'OK'}])
+        }
+        else if(note.content.length < 1)
+        {
+            Alert.alert('Failed', 'Note content should not be empty', [ {text: 'OK'}])
+        }
+        else{
+            addNote(note.title, note.content, note.tag)
+            setNote({ title: "", content: "", tag: "" })
+            ToastAndroid.show('Note was added successfully!', ToastAndroid.SHORT)
+        }
     }
 
     return (
         <View style={styles.box}>
-            {/* <Text style={styles.boxHeader}>Add a note</Text> */}
             <TextInput
                 label="Note title"
                 mode='outlined'
