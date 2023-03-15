@@ -83,7 +83,7 @@ export default function LoginScreen(props) {
                             </Button>
                         </View>
 
-                        <Text>Don't have an account?
+                        <Text>Don't have an account? 
                             <TouchableOpacity 
                             style={{ backgroundColor: '#61daab', paddingHorizontal: 2, marginHorizontal: 10, paddingVertical: 2, borderRadius: 5 }}
                             onPress={()=>{

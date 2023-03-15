@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Modal, StyleSheet, Text, View, ToastAndroid } from 'react-native';
+import { Modal, StyleSheet, Text, View, ToastAndroid, Alert } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
+import AntDesign from '@expo/vector-icons/AntDesign'
 import noteContext from '../contexts/notes/NoteContext'
 import Loading from './Loading';
 
@@ -38,10 +39,21 @@ function Notes(props) {
     }
 
     const handleModalUpdateBtnClick = () => {
-        // console.log(modalNote)
-        updateNote(modalNote.m_id, modalNote.m_title, modalNote.m_content, modalNote.m_tag)
-        setShowModal(false)
-        ToastAndroid.show('Successfully updated!!!', ToastAndroid.SHORT)
+        if(modalNote.m_title.length<1)
+        {
+            Alert.alert('Failed', 'Note title should not be empty', [{ text: 'OK' }])
+        }
+        else if(modalNote.m_content.length<1)
+        {
+            Alert.alert('Failed', 'Note content should not be empty', [{ text: 'OK' }])
+        }
+        else
+        {
+            // console.log(modalNote)
+            updateNote(modalNote.m_id, modalNote.m_title, modalNote.m_content, modalNote.m_tag)
+            setShowModal(false)
+            ToastAndroid.show('Successfully updated!!!', ToastAndroid.SHORT)
+        }
     }
 
     useEffect(() => {
@@ -92,24 +104,24 @@ function Notes(props) {
                         </View>
                         <View style={styles.button_container}>
                             <Button
-                                mode='contained'
+                                // mode='contained'
                                 style={styles.button__cancel}
                                 onPress={() => { setShowModal(false) }}
                             >
-                                Cancel
+                                <AntDesign name='closecircleo' size={18} onPress={() => { setShowModal(false) }} /> Cancel
                             </Button>
                             <Button
                                 mode='contained'
-                                style={styles.button__update}
+                                // style={styles.button__update}
                                 onPress={() => { handleModalUpdateBtnClick() }}
                             >
-                                Update
+                                <AntDesign name='checkcircleo' size={18} onPress={() => { handleModalUpdateBtnClick() }} /> Update
                             </Button>
                         </View>
                     </View>
                 </View>
             </Modal>
-            <Text style={styles.note__container__header}> Your Notes:</Text>
+            <Text style={styles.note__container__header}> Your Notes</Text>
             {loading ? <Loading /> :
                 <>
                     <View style={styles.note__container}>
@@ -166,7 +178,7 @@ const styles = StyleSheet.create({
     modal__header: {
         fontSize: 25,
         fontWeight: 'bold',
-        marginVertical: 10,
+        marginVertical: 5,
         paddingHorizontal: 7
     },
     input: {
@@ -179,11 +191,12 @@ const styles = StyleSheet.create({
         marginBottom: 6
     },
     button__cancel: {
-        backgroundColor: '#ff4f4f',
+        // backgroundColor: '#ff4f4f',
+        color: '#ff4f4f'
     },
-    button__update: {
-        backgroundColor: '#047ec4'
-    },
+    // button__update: {
+    //     backgroundColor: '#047ec4'
+    // },
 })
 
 

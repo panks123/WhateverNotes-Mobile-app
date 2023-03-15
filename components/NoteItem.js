@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react'
 import { Text, View, StyleSheet, ToastAndroid, Alert } from 'react-native'
 import { Button, Badge } from 'react-native-paper';
+import AntDesign from '@expo/vector-icons/AntDesign'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
 import noteContext from '../contexts/notes/NoteContext'
 
 const NoteItem = (props) => {
@@ -60,18 +62,19 @@ const NoteItem = (props) => {
             <Text style={styles.card__content}> {note.content}</Text>
             <View style={styles.button_container}>
                 <Button
-                    mode='contained'
+                    // mode='outlined'
                     style={styles.button__delete}
+                    textColor='#c70202'
                     onPress={() => { handleDelete(note._id) }}
                 >
-                    Delete
+                    <AntDesign name='delete' size={20} onPress={() => { handleUpdateBtnClick() }} /> Delete
                 </Button>
                 <Button
                     mode='contained'
-                    style={styles.button__update}
+                    // style={styles.button__update}
                     onPress={() => { handleUpdateBtnClick(note) }}
                 >
-                    Update
+                    <FontAwesome name='pencil-square-o' size={18} onPress={() => { handleUpdateBtnClick() }} /> Update
                 </Button>
             </View>
         </View>
@@ -102,7 +105,8 @@ const styles = StyleSheet.create({
         marginBottom: 6
     },
     button__delete: {
-        backgroundColor: '#ff4f4f',
+        borderColor: '#c70202',
+        borderWidth: 1
     },
     button__update: {
         backgroundColor: '#047ec4'

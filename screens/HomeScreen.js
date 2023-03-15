@@ -6,10 +6,11 @@ import NoteState from "../contexts/notes/NoteState";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AddNote from "../components/AddNote";
+import TopBar from "../components/TopBar";
 
 export default function HomeScreen(props) {
 
-    const [userDetails, setUserDetails] = useState({ name: "", email: "" })
+    const [showAddNote, setShowAddNote] = useState(false)
 
     const handleLogout = () => {
         // console.log("Logout button clicked")
@@ -18,20 +19,6 @@ export default function HomeScreen(props) {
             props.navigation.replace('login')
         })
     }
-    const fetchUserDatails = async () => {
-        try {
-            const name = await AsyncStorage.getItem('username')
-            const email = await AsyncStorage.getItem('useremail')
-            setUserDetails({ name: name, email: email })
-        }
-        catch (e) {
-            console.log(e)
-        }
-    }
-
-    useEffect(() => {
-        fetchUserDatails()
-    }, [])
 
     return (
         <>
@@ -39,19 +26,10 @@ export default function HomeScreen(props) {
                 <ScrollView>
                     <NoteState>
                         <View style={styles.box}>
-                            {/* <Text>Hello 🎉</Text>
-                            <Text>Logged in as: </Text>
-                            <Text>Name : {userDetails.name}</Text>
-                            <Text>Email : {userDetails.email}</Text> */}
-                            <AddNote/>
-                            <Button
-                                mode="contained"
-                                onPress={() => {
-                                    handleLogout()
-                                }}
-                            >
-                                Log out
-                            </Button>
+                            <TopBar handleLogout = {handleLogout} setShowAddNote = { setShowAddNote}/>
+                            {
+                                showAddNote ? <AddNote showAddNote = {showAddNote} setShowAddNote= {setShowAddNote}/> : <></>
+                            }
                         </View>
 
                         <Notes />
